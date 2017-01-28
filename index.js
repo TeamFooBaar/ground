@@ -11,6 +11,11 @@ const PORT = 3232
 
 const app = express();
 
+function endFlight() {
+	console.log("call reset on contract, push to ipfs")
+	d.resetState({from: GROUND_PUBLIC_KEY})
+}
+
 app.listen(PORT, () => {
 	console.log("Ground station started!")
 })
@@ -21,7 +26,6 @@ DroneNoOraclize.setProvider(web3.currentProvider);
 
 var events = d.flightRequest( {}, {fromBlock: 'latest', toBlock: 'latest'})
 events.watch(function(error, result) {
-
-    console.log(result)
+    console.log(result) // go drone
 });
 
