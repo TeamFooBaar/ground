@@ -22,8 +22,8 @@ app.use(bodyParser.json())
 const drone = require('../drone')
 
 function handleLanded(e) {
-	ipfs.util.addFromFs('./images/' + drone.imageFileName).then(ipfsHash => {
-		console.log(ipfsHash)
+	ipfs.util.addFromFs('./images/' + drone.imageFileName).then(results => {
+		var ipfsHash = results[0].hash
 		d.resetState(ipfsHash, {
 			from: GROUND_PUBLIC_KEY
 		}).then(r => {
