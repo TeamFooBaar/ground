@@ -11,6 +11,7 @@ const web3 = new Web3(new Web3.providers.HttpProvider(ETH_URL))
 const GROUND_PUBLIC_KEY = web3.eth.accounts[1]
 const PORT = 3232
 const ipfsAPI = require('ipfs-api')
+
 var ipfs = ipfsAPI('localhost', '5001', {
 	protocol: 'http'
 })
@@ -36,9 +37,9 @@ function handleLanded(e) {
 
 }
 
-// app.listen(PORT, () => {
-// 	console.log("Ground station started!")
-// })
+app.listen(PORT, () => {
+	console.log("Ground station started!")
+})
 
 var d = DroneNoOraclize.deployed()
 
@@ -49,5 +50,6 @@ var events = d.flightRequest({}, {
 	toBlock: 'latest'
 })
 events.watch(function(error, result) {
-	console.log(result) // go drone
+	if(error) return console.log(error)
+	if(result.args.acceptedOrNot === 'accepted') return drone.startMission();
 });
