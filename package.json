@@ -10,7 +10,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.16.0",
     "express": "^4.14.0",
+    "ipfs-api": "^12.1.4",
+    "request": "^2.79.0",
     "web3": "^0.18.2"
   },
   "devDependencies": {

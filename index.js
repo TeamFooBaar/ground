@@ -1,5 +1,7 @@
-const express = require("express")
+const express = require('express')
 const Web3 = require('web3')
+const request = require('request')
+const bodyParser = require('body-parser')
 
 const DroneNoOraclize = require("./DroneNoOraclize.sol.js")
 
@@ -8,24 +10,44 @@ const web3 = new Web3(new Web3.providers.HttpProvider(ETH_URL))
 
 const GROUND_PUBLIC_KEY = web3.eth.accounts[1]
 const PORT = 3232
+const ipfsAPI = require('ipfs-api')
+var ipfs = ipfsAPI('localhost', '5001', {
+	protocol: 'http'
+})
 
 const app = express();
+app.use(bodyParser.json())
 
-function endFlight() {
-	console.log("call reset on contract, push to ipfs")
-	d.resetState({from: GROUND_PUBLIC_KEY})
+const drone = require('../drone')
+
+function handleLanded(e) {
+	ipfs.util.addFromFs('./images/' + drone.imageFileName).then(ipfsHash => {
+		console.log(ipfsHash)
+		d.resetState(ipfsHash, {
+			from: GROUND_PUBLIC_KEY
+		}).then(r => {
+			return res.send("drone ready for next mission")
+		}).catch(e => {
+			return res.send("error ending flight: " + e)
+		})
+	}).catch(err => {
+		return res.send("error pushing to ipfs: " +  err)
+	})
+
 }
 
-app.listen(PORT, () => {
-	console.log("Ground station started!")
-})
+// app.listen(PORT, () => {
+// 	console.log("Ground station started!")
+// })
 
 var d = DroneNoOraclize.deployed()
 
 DroneNoOraclize.setProvider(web3.currentProvider);
 
-var events = d.flightRequest( {}, {fromBlock: 'latest', toBlock: 'latest'})
+var events = d.flightRequest({}, {
+	fromBlock: 'latest',
+	toBlock: 'latest'
+})
 events.watch(function(error, result) {
-    console.log(result) // go drone
+	console.log(result) // go drone
 });
-
