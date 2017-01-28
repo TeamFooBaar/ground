@@ -3,10 +3,12 @@ const Web3 = require('web3')
 const request = require('request')
 const bodyParser = require('body-parser')
 
-const DroneNoOraclize = require("./DroneNoOraclize.sol.js")
+const Drone = require("./Drone.sol.js")
 
 const ETH_URL = "http://localhost:8545"
 const web3 = new Web3(new Web3.providers.HttpProvider(ETH_URL))
+
+console.log(web3.eth.accounts)
 
 const GROUND_PUBLIC_KEY = web3.eth.accounts[0]
 const PORT = 3232
@@ -34,18 +36,15 @@ function handleLanded(e) {
 	}).catch(err => {
 		return res.send("error pushing to ipfs: " +  err)
 	})
-
 }
 
 app.listen(PORT, () => {
 	console.log("Ground station started!")
 })
 
-//var d = DroneNoOraclize.deployed()
-var d = DroneNoOraclize.at("0xf5Fe6d14876Ee366420fFc6cb597dfbc5E2dd1D5")
+var d = Drone.at("0xf5Fe6d14876Ee366420fFc6cb597dfbc5E2dd1D5")
 
-
-DroneNoOraclize.setProvider(web3.currentProvider);
+Drone.setProvider(web3.currentProvider);
 
 var events = d.flightRequest({}, {
 	fromBlock: 'latest',
