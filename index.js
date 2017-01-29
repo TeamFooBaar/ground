@@ -23,7 +23,7 @@ app.use(bodyParser.json())
 
 const drone = require('../drone')
 
-drone.on("endMission", handleResult())
+drone.on("endMission", handleResult)
 
 function handleResult(e) {
 
@@ -55,5 +55,5 @@ var events = d.flightRequest({}, {
 })
 events.watch(function(error, result) {
 	if(error) return console.log(error)
-	if(result.args.acceptedOrNot === 'accepted') return drone.startMission(result.args.destination);
+	if(result.args.acceptedOrNot === 'accepted') return drone.startMission(result.args.to);
 });
