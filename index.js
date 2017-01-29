@@ -28,16 +28,17 @@ drone.on("endMission", handleResult)
 function handleResult(e) {
 
 	ipfs.util.addFromFs('./images/' + drone.imageFileName).then(results => {
+		console.log(results);
 		var ipfsHash = results[0].hash
 		d.resetState(ipfsHash, {
 			from: GROUND_PUBLIC_KEY
 		}).then(r => {
-			return res.send("drone ready for next mission")
+			return console.log("drone ready for next mission")
 		}).catch(e => {
-			return res.send("error ending flight: " + e)
+			return console.log("error ending flight: " + e)
 		})
 	}).catch(err => {
-		return res.send("error pushing to ipfs: " +  err)
+		return console.log("error pushing to ipfs: " +  err)
 	})
 }
 
