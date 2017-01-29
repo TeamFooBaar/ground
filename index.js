@@ -26,6 +26,7 @@ const drone = require('../drone')
 drone.on("endMission", handleResult())
 
 function handleResult(e) {
+
 	ipfs.util.addFromFs('./images/' + drone.imageFileName).then(results => {
 		var ipfsHash = results[0].hash
 		d.resetState(ipfsHash, {
@@ -54,5 +55,5 @@ var events = d.flightRequest({}, {
 })
 events.watch(function(error, result) {
 	if(error) return console.log(error)
-	if(result.args.acceptedOrNot === 'accepted') return drone.startMission();
+	if(result.args.acceptedOrNot === 'accepted') return drone.startMission(result.args.destination);
 });
